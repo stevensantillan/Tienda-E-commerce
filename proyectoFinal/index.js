@@ -1,125 +1,104 @@
-let precio = 10;
-let envio = 5;
+//INICIALIZAR VARIABLES
 
-const suma = (a,b) => a + b;
-const multi = (a,b) => a * b;
-const descuento = a => a * 0.9; 
-const recarga = a => a * 1.15;
+let contenedorProd = document.getElementById("productos");
+let contCarrito = document.getElementById("carro");
+let carrito = [];
+let finalizarCarrito = document.getElementById("finalizar");
 
-while(true){
-let iniciar = parseInt(prompt("Por favor, seleccione el número de código de su forma de pago: 1. Efectivo  2. Tarjeta de Crédito  3. Tarjeta de Débito"));
+//INICIALIZAR FUNCIONES
 
-if (iniciar === 1){
-    console.log(iniciar);
-    while(true){
-        cantidad = parseInt(prompt("El precio unitario es $10 y hay disponible 5 unidades, cuantos desea llevar?:"));
-            if (cantidad<=5){
-                console.log(cantidad);
-                let total = multi(cantidad,precio);
-                console.log(total);
-                let efectivo = descuento(total);
-                console.log(efectivo);
-                alert("Por pago en efectivo, obtiene un descuento del 10%, el total es: $" + efectivo);
-                while(true){
-                    let enviar = parseInt(prompt("Desea envio a domicilio? = 1. SI 2. NO"));
-                    if (enviar == 1){
-                        console.log(enviar);
-                        let totalFinal = suma(efectivo, envio);
-                        console.log(totalFinal);
-                        alert("El envio es: $" + envio + ". En total hay que abonar: $" + totalFinal); break;
-                    }
-                    else if (enviar == 2){
-                        console.log(enviar);
-                        alert("Podrá pasar a retirar su/s producto/s por una de nuestras sucursales."); break;
-                    }
-                    else{
-                        console.log(enviar);
-                        alert("Comando no válido, por favor intentar nuevamente.")
-                    }
-                }
-                alert("Gracias por comprar!");break;
-                }
-            else{
-                alert("No hay stock, por favor intente nuevamente.");
-            }
-    } 
-break;}
+cargarCarrito();
+mostrarProductos();
+mostrarCarrito();
+finalizar();
 
-else if (iniciar === 2){
-    console.log(iniciar);
-    while(true){
-        cantidad = parseInt(prompt("El precio unitario es $10 y hay disponible 5 unidades, cuantos desea llevar?:"));
-            if (cantidad<=5){
-                console.log(cantidad);
-                let total = multi(cantidad,precio);
-                console.log(total);
-                let credito = recarga(total);
-                console.log(credito);
-                alert("Por pago con tarjeta de crédito, se aplicará una recarga del 15%, en total es: $" + credito);
-                    while(true){
-                        let enviar = parseInt(prompt("Desea envio a domicilio? = 1. SI 2. NO"));
-                        if (enviar == 1){
-                            console.log(enviar);
-                            let totalFinal = suma(credito, envio);
-                            console.log(totalFinal);
-                            alert("El envio es: $" + envio + ". En total hay que abonar: $" + totalFinal); break;
-                        }
-                        else if (enviar == 2){
-                            console.log(enviar);
-                            alert("Podrá pasar a retirar su/s producto/s por una de nuestras sucursales."); break;
-                        }
-                        else{
-                            console.log(enviar);
-                            alert("Comando no válido, por favor intentar nuevamente.")
-                        }
-                    }    
-                alert("Gracias por comprar!"); break;
-                }
-            else{
-                alert("No hay stock, por favor intente nuevamente.");
-            }
-    }
-break;}
+  function cargarCarrito() {
+    (localStorage.getItem("StorageCarrito") !== null) ? carrito = JSON.parse(localStorage.getItem("StorageCarrito")) : localStorage.setItem("StorageCarrito", JSON.stringify(carrito))
+  }
 
-else if (iniciar === 3){
-    console.log(iniciar);
-    while(true){
-        cantidad = parseInt(prompt("El precio unitario es $10 y hay disponible 5 unidades, cuantos desea llevar?:"));
-            if (cantidad<=5){
-                console.log(cantidad);
-                let total = multi(cantidad,precio);
-                console.log(total);
-                alert("Usted pagó con tarjeta de débito, por lo tanto no aplican promociones, en total es: $" + total);
-                while(true){
-                    let enviar = parseInt(prompt("Desea envio a domicilio? = 1. SI 2. NO"));
-                    if (enviar == 1){
-                        console.log(enviar);
-                        let totalFinal = suma(total, envio);
-                        console.log(totalFinal);
-                        alert("El envio es: $" + envio + ". En total hay que abonar: $" + totalFinal); break;
-                    }
-                    else if (enviar == 2){
-                        console.log(enviar);
-                        alert("Podrá pasar a retirar su/s producto/s por una de nuestras sucursales."); break;
-                    }
-                    else{
-                        console.log(enviar);
-                        alert("Comando no válido, por favor intentar nuevamente.")
-                    }
-                }
-                alert("Gracias por comprar!"); break;
-                }
-            else{
-                alert("No hay stock, por favor intente nuevamente.");
-            }
-    }
-break;}
+//MOSTRAR PRODUCTOS
 
-else{
-    if (iniciar !==1 !==2 !==3){
-        console.log(iniciar);
-        alert("No es un elemento válido.");
-    }
-}
+function mostrarProductos(){
+    productosTotales.forEach ((productosTotales) =>{
+        contenedorProd.innerHTML += `
+<div class="card col-3 prods border-danger mb-3 text-center" style="width: 23rem;">
+<img src="${productosTotales.avatar}" class="card-img-top" alt="1">
+<div class="card-body">
+<h5 class="card-title">${productosTotales.nombre}</h5>
+<p class="card-text">El precio es $${productosTotales.precio}.</p>
+<button onClick="agregarProducto(${productosTotales.id})" class="btn btn-outline-success">Agregar</button>
+</div>
+</div>`;
+});}
+
+//MOSTRAR CARRITO
+
+function mostrarCarrito(){
+    carrito.forEach ((carrito) =>{
+        contCarrito.innerHTML += `
+<div class="card col-3 prods border-danger mb-3 text-center" style="width: 23rem;">
+<img src="${carrito.avatar}" class="card-img-top" alt="1">
+<div class="card-body">
+<h5 class="card-title">${carrito.nombre}</h5>
+<p class="card-text">El precio es $${carrito.precio}.</p>
+<select class="form-select" aria-label="Default select example" id="cantid">
+  <option selected>Seleccione el talle</option>
+  <option value="1">36</option>
+  <option value="2">37</option>
+  <option value="3">38</option>
+  <option value="1">39</option>
+  <option value="2">40</option>
+  <option value="3">41</option>
+  <option value="1">42</option>
+  <option value="2">43</option>
+  <option value="3">44</option>
+</select>
+<button onClick="quitarCarrito(${carrito.id})" class="btn btn-outline-danger">Quitar</button>
+</div>
+</div>`;});}
+
+//AGREGAR AL CARRITO
+
+function agregarProducto(ide){
+    let index = ide -1;
+    let productoSeleccionado = {};
+    productoSeleccionado = productosTotales[index];
+    !carrito.some(e=>e.id===ide) ? carrito.push(productoSeleccionado) & console.log (carrito) & localStorage.setItem("StorageCarrito", JSON.stringify(carrito)) & location.reload() : alert("El producto ya se encuentra en el carrito")
 }
 
+//QUITAR DEL CARRITO
+
+function quitarCarrito(id){
+    let carritoQuit = carrito.filter((el)=>el.id !=id);
+    carrito = carritoQuit;
+    console.log(carritoQuit);
+    localStorage.setItem("StorageCarrito", JSON.stringify(carrito));
+  console.log(carritoQuit);
+  location.reload();
+}
+
+//FINALIZAR CARRITO    
+
+let acumulador = 0;
+let cantidad = 
+console.log(carrito);
+console.log(carrito.length);
+
+function finalizar(){    
+       finalizarCarrito.innerHTML += `<button id="finalizarCarrito" class="btn btn-outline-success">Finalizar Carrito</button>
+        `;}
+
+const finalizarFinal = carrito.map ((el)=>el.precio)
+console.log(finalizarFinal);
+    
+let precioFinal = finalizarFinal.reduce((acumulador,elemento) => acumulador + elemento,0);
+
+let finalFinal = document.getElementById("finalizarCarrito")
+finalFinal.onclick = () => {
+    Swal.fire({
+        title: 'Haz finalizado tu compra',
+        text: `El precio final es: $${precioFinal}`,
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+}
